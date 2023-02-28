@@ -1,10 +1,10 @@
 openapi: 3.0.0
 info:
-  version: 0.0.1
+  version: 0.0.2
   title: Policy API
   description: API to manage policy flow.
 paths:
-  /policy/v1:
+  /v1/policy:
     post:
       tags:
         - Policy
@@ -22,7 +22,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PolicyId'
+                $ref: '#/components/schemas/CreatePolicyResponse'
         '404':
           description: Policy creation failed
           content:
@@ -30,11 +30,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                code: "404"
-                message: "Policy could not be created"
-                data: "Long descriptive message"
-                type: "Application error"
-                path: "/policy/v1"
+                error:
+                  code: "404"
+                  message: "Policy could not be created"
+                  data: "Long descriptive message"
+                  type: "Application error"
+                  path: "/v1/policy"
         '500':
           description: Policy could not be created due to unexpected error
           content:
@@ -42,11 +43,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                code: "500"
-                message: "Error processing request {specific error log from exception/error}"
-                data: "Additional error message/logs"
-                type: "System error"
-                path: "/policy/v1"
+                error:
+                  code: "500"
+                  message: "Error processing request {specific error log from exception/error}"
+                  data: "Additional error message/logs"
+                  type: "System error"
+                  path: "/v1/policy"
     put:
       tags:
         - Policy
@@ -64,7 +66,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PolicyId'
+                $ref: '#/components/schemas/UpdatePolicyStatusResponse'
         '404':
           description: Policy status update failed
           content:
@@ -72,11 +74,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                code: "404"
-                message: "Policy status could not be updated"
-                data: "Long descriptive message"
-                type: "Application error"
-                path: "/policy/v1"
+                error:
+                  code: "404"
+                  message: "Policy status could not be updated"
+                  data: "Long descriptive message"
+                  type: "Application error"
+                  path: "/v1/policy"
         '500':
           description: Policy status could not be updated due to unexpected error
           content: 
@@ -84,12 +87,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                code: "500"
-                message: "Error processing request {specific error log from exception/error}"
-                data: "Additional error message/logs"
-                type: "System error"
-                path: "/policy/v1"
-  /policy/v1/{domain}/{type}/{county}/{city}/{status}:
+                error:
+                  code: "500"
+                  message: "Error processing request {specific error log from exception/error}"
+                  data: "Additional error message/logs"
+                  type: "System error"
+                  path: "/v1/policy"
+  /v1/policy/{domain}/{type}/{county}/{city}/{status}:
     get:
       tags:
         - Policy
@@ -166,7 +170,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PoliciesMetaData'
+                $ref: '#/components/schemas/GetPoliciesResponse'
         '404':
           description: Requested policies could not be retrieved
           content:
@@ -174,11 +178,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                code: "404"
-                message: "Requested policies could not be retrieved"
-                data: "Long descriptive message"
-                type: "Application error"
-                path: "/policy/v1/{domain}/{type}/{county}/{city}/{status}"
+                error:
+                  code: "404"
+                  message: "Requested policies could not be retrieved"
+                  data: "Long descriptive message"
+                  type: "Application error"
+                  path: "/v1/policy/{domain}/{type}/{county}/{city}/{status}"
         '500':
           description: Requestd policies could not be retrieved due to unexpected error
           content:
@@ -186,12 +191,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                code: "500"
-                message: "Error processing request {specific error log from exception/error}"
-                data: "Additional error message/logs"
-                type: "System error"
-                path: "/policy/v1/{domain}/{type}/{county}/{city}/{status}"
-  /policy/v1/{policyId}:
+                error:
+                  code: "500"
+                  message: "Error processing request {specific error log from exception/error}"
+                  data: "Additional error message/logs"
+                  type: "System error"
+                  path: "/v1/policy/{domain}/{type}/{county}/{city}/{status}"
+  /v1/policy/{policyId}:
     get:
       tags:
         - Policy
@@ -219,11 +225,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                code: "404"
-                message: "Policy details could not be retrieved"
-                data: "Long descriptive message"
-                type: "Application error"
-                path: "/policy/v1/{policyId}"
+                error:
+                  code: "404"
+                  message: "Policy details could not be retrieved"
+                  data: "Long descriptive message"
+                  type: "Application error"
+                  path: "/v1/policy/{policyId}"
         '500':
           description: Policy details could not be retrieved due to unexpected error
           content:
@@ -231,11 +238,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                code: "500"
-                message: "Error processing request {specific error log from exception/error}"
-                data: "Additional error message/logs"
-                type: "System error"
-                path: "/policy/v1/{policyId}"
+                error:
+                  code: "500"
+                  message: "Error processing request {specific error log from exception/error}"
+                  data: "Additional error message/logs"
+                  type: "System error"
+                  path: "/v1/policy/{policyId}"
 components:
   schemas:
     Policy:
@@ -325,44 +333,79 @@ components:
     CreatePolicy:
       description: Schema for Policy creation
       type: object
-      required:
-        - domain
-        - type
-        - country
-        - city
-        - name
-        - description
-        - owner
-        - startDate
-        - endDate
-        - applicableTo
-        - polygon
-        - status
-      allOf:  
-        - $ref: '#/components/schemas/Policy'
-        - $ref: '#/components/schemas/PolicyStatus'
       properties:
-        createdBy:
-          description: Policy creator id/email
-          type: string
+        policy:
+          type: object
+          required:
+            - domain
+            - type
+            - country
+            - city
+            - name
+            - description
+            - owner
+            - startDate
+            - endDate
+            - applicableTo
+            - polygon
+            - status
+          allOf:  
+            - $ref: '#/components/schemas/Policy'
+            - $ref: '#/components/schemas/PolicyStatus'
+          properties:
+            createdBy:
+              description: Policy creator id/email
+              type: string
+    CreatePolicyResponse:
+      description: Schema for Policy creation response
+      type: object
+      properties:
+        policy:
+          type: object
+          required:
+            - policyId
+            - status
+          allOf:  
+            - $ref: '#/components/schemas/PolicyId'
+            - $ref: '#/components/schemas/PolicyStatus'
     UpdatePolicyStatus:
       description: Schema for Policy status update
       type: object
-      required:
-        - policyId
-        - status
       properties:
-        policyId:
-          description: Policy id
-          type: string
-        status:
-          description: Policy status
-          type: string
-        modifiedBy:
-          description: Policy status modifier id/email
-          type: string
+        policy:
+          type: object
+          required:
+            - policyId
+            - status
+          allOf:  
+            - $ref: '#/components/schemas/PolicyId'
+            - $ref: '#/components/schemas/PolicyStatus'
+          properties:
+            modifiedBy:
+              description: Policy status modifier id/email
+              type: string
+    UpdatePolicyStatusResponse:
+      description: Schema for Policy update response
+      type: object
+      properties:
+        policy:
+          type: object
+          required:
+            - policyId
+            - status
+          allOf:  
+            - $ref: '#/components/schemas/PolicyId'
+            - $ref: '#/components/schemas/PolicyStatus'
+    GetPoliciesResponse:
+      description: Schema to list requested policies metadata
+      type: object
+      properties:
+        policies:
+          type: array
+          items:
+            $ref: '#/components/schemas/PoliciesMetaData'
     PoliciesMetaData:
-      description: Schema for Policy metadata (List policies)
+      description: Schema for Policy metadata
       type: object
       required:
         - id
@@ -390,37 +433,40 @@ components:
     PolicyDetails:
       description: Schema for Policy details
       type: object
-      required:
-        - id
-        - status
-        - domain
-        - type
-        - country
-        - city
-        - name
-        - description
-        - owner
-        - startDate
-        - endDate
-        - applicableTo
-        - polygon
-      allOf:  
-        - $ref: '#/components/schemas/PolicyId'
-        - $ref: '#/components/schemas/PolicyStatus'
-        - $ref: '#/components/schemas/Policy'
       properties:
-        createdBy:
-          description: Policy creator id/email
-          type: string
-        createdAt:
-          description: Policy creation timestamp
-          type: string
-        latModifiedBy:
-          description: Policy modifier id/email
-          type: string
-        lastModifiedAt:
-          description: Policy updation timestamp
-          type: string
+        policy:
+          type: object
+          required:
+            - id
+            - status
+            - domain
+            - type
+            - country
+            - city
+            - name
+            - description
+            - owner
+            - startDate
+            - endDate
+            - applicableTo
+            - polygon
+          allOf:  
+            - $ref: '#/components/schemas/PolicyId'
+            - $ref: '#/components/schemas/PolicyStatus'
+            - $ref: '#/components/schemas/Policy'
+          properties:
+            createdBy:
+              description: Policy creator id/email
+              type: string
+            createdAt:
+              description: Policy creation timestamp
+              type: string
+            latModifiedBy:
+              description: Policy modifier id/email
+              type: string
+            lastModifiedAt:
+              description: Policy updation timestamp
+              type: string
     Context:
       description: Policy schema context object
       type: object
@@ -443,27 +489,30 @@ components:
           type: string
     Error:
       type: object
-      required:
-        - type
-        - code
-        - message
-        - path
       properties:
-        code:
-          description: Policy specific error code
-          type: string
-        message:
-          description: Human readable error message from databse/API
-          type: string
-        data:
-          description: Additional error data
+        error:
           type: object
-        type:
-          description: Error type
-          type: string
-        path:
-          description: Path to json schema generating the error. Used only during json schema validation errors
-          type: string
+          required:
+            - type
+            - code
+            - message
+            - path
+          properties:
+            code:
+              description: Policy specific error code
+              type: string
+            message:
+              description: Human readable error message from databse/API
+              type: string
+            data:
+              description: Additional error data
+              type: object
+            type:
+              description: Error type
+              type: string
+            path:
+              description: Path to json schema generating the error. Used only during json schema validation errors
+              type: string
   securitySchemes:
     ApiKey:
       type: apiKey
@@ -474,4 +523,3 @@ security:
 servers:
   - url: https://api.policy.becknprotocol.io
     variables: {}
- 
