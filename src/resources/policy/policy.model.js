@@ -40,10 +40,10 @@ const policySchema=new Schema({
 		type: Date,
 		required: true,
 	},
-    applicableTo:{
+    applicableTo:[{
         type: String,
 		required: true,
-    },
+    }],
     polygon:[{
         type: String,
 		required: true,
@@ -52,8 +52,8 @@ const policySchema=new Schema({
     
     status: {
 		type: String,
-		enum: ["Active", "InActive","Published"],
-		default: "ACTIVE",
+		enum: ["active", "inActive","published"],
+		default: "active",
 	},
     createdBy:{
         
