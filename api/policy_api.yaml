@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 0.0.2
+  version: 0.0.3
   title: Policy API
   description: API to manage policy flow.
 paths:
@@ -49,7 +49,7 @@ paths:
                   data: "Additional error message/logs"
                   type: "System error"
                   path: "/v1/policy"
-    put:
+    patch:
       tags:
         - Policy
       summary: Update Policy Status
@@ -93,7 +93,6 @@ paths:
                   data: "Additional error message/logs"
                   type: "System error"
                   path: "/v1/policy"
-  /v1/policy/{domain}/{type}/{county}/{city}/{status}:
     get:
       tags:
         - Policy
@@ -101,69 +100,54 @@ paths:
       parameters:
         - name: domain
           description: Policy domain
-          in: path
-          required: true
+          in: query
+          required: false
           schema:
             type: string
           examples:
-            Domain Name:
+            Get mobility domain policies:
               value:
                 "mobility"
-            All domains:
-              value:
-                "all"
         - name: type
           description: Policy type
-          in: path
-          required: true
+          in: query
+          required: false
           schema:
             type: string
           examples:
-            Specific policy type:
+            Get geofence policies:
               value:
                 "GeofencePolicy"
-            All policy types:
-              value:
-                "all"
         - name: county
           description: Policy county
-          in: path
-          required: true
+          in: query
+          required: false
           schema:
             type: string
           examples:
-            Specific country:
+            Get policies created for India:
               value:
                 "IND"
-            All countries:
-              value:
-                "all"
         - name: city
           description: Policy city
-          in: path
-          required: true
+          in: query
+          required: false
           schema:
             type: string
           examples:
-            Specific city:
+            Get policies created for Bengaluru:
               value:
                 "std:080"
-            All cities:
-              value:
-                "all"
         - name: status
           description: Policy status
-          in: path
-          required: true
+          in: query
+          required: false
           schema:
             type: string
           examples:
-            Specific status:
+            Get published policies:
               value:
                 "published"
-            All policies:
-              value:
-                "all"
       responses:
         '200':
           description: Requested policies retrieved
