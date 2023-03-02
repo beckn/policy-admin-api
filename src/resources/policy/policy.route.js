@@ -41,7 +41,7 @@ const policyResponse = ({
         polygon
 });
 
-const userResponse=({id,status,name,description,startDate,endDate})=>({id,status,name,description,startDate,endDate})
+const userResponse=({policyId,status,name,description,startDate,endDate})=>({policyId,status,name,description,startDate,endDate})
 
 function definePolicyRoutes(expressApp)
 {
@@ -300,7 +300,8 @@ function definePolicyRoutes(expressApp)
        
         try {
             const {id,status,modifiedBy}=request.body.policy
-            
+           
+           const policy_status=status.toLowerCase()
                 if(!Boolean(id))
                 {
                     response
@@ -317,6 +318,7 @@ function definePolicyRoutes(expressApp)
 
                 if(!Boolean(status))
                 {
+                
                     response
 					.status(httpStatus.BAD_REQUEST)
 					.send({"error": {
@@ -328,8 +330,9 @@ function definePolicyRoutes(expressApp)
 				logger.fatal(`validation error ${request.headers["x-request-id"]}`);
 				return null;
                 }
-                if(status!="active"||status!="inactive"||status!="published")
+                if(policy_status!=="active" && policy_status!=="inactive" && policy_status!=="published")
                 {
+                    
                     response
 					.status(httpStatus.BAD_REQUEST)
 					.send({"error": {
@@ -345,7 +348,7 @@ function definePolicyRoutes(expressApp)
 
 
             const value = modifiedBy ? modifiedBy : "system"
-			const result = await Policy.findOneAndUpdate({policyId:id},{ $set: { status: status,modifiedBy: value,modifiedAt:new Date().toISOString()
+			const result = await Policy.findOneAndUpdate({policyId:id},{ $set: { status: policy_status,modifiedBy: value,modifiedAt:new Date().toISOString()
         }},{
                 new: true
               });
