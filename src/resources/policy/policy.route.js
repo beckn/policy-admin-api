@@ -4,35 +4,44 @@ const mongoose = require("mongoose");
 const Policy = require("./policy.model");
 const logger = require("../../libraries/logger");
 const { v4: uuidv4 } = require('uuid');
-const userResponse = ({
-	policyId,
+const format=require("date-fns/format");
+const policyResponse = ({
+	id,
          status,
-         domain,
-         type,
-        country,
-         city,
+        domain,
+        type,
+       country,
+        city,
          name,
          description,
          owner,
+        rules,
+         contactEmail,
+        policyDocuments,
          startDate,
          endDate,
          applicableTo,
-        polygon
+       polygon
 }) => ({
-	policyId,
+	id,
          status,
-         domain,
+        domain,
          type,
         country,
          city,
          name,
          description,
          owner,
+         rules,
+         contactEmail,
+         policyDocuments,
          startDate,
          endDate,
          applicableTo,
         polygon
 });
+
+const userResponse=({id,status,name,description,startDate,endDate})=>({id,status,name,description,startDate,endDate})
 
 function definePolicyRoutes(expressApp)
 {
@@ -42,11 +51,11 @@ function definePolicyRoutes(expressApp)
 		async (request, response) => {
 			try {
 				
-                const {status,domain,type,country,city,name,description,owner,startDate,endDate,applicableTo,polygon,createdBy}=request.body
+                const {status,domain,type,country,city,name,description,owner,rules,contactEmail,policyDocuments,startDate,endDate,applicableTo,polygon,createdBy}=request.body.policy
 
 				const policyId = uuidv4();
                 
-
+                 const value = createdBy ? createdBy : "system"
 
 				const result = await Policy.create({
 					policyId,
@@ -58,21 +67,38 @@ function definePolicyRoutes(expressApp)
                     name,
                     description,
                     owner,
-                    startDate: new Date(startDate),
-                    endDate: new Date(endDate),
+                    rules,
+                    contactEmail,
+                    policyDocuments,
+                    startDate:format(new Date(startDate), 'yyyy-MM-dd'),
+                    endDate: format(new Date(endDate), 'yyyy-MM-dd'),
                     applicableTo,
                     polygon,
-                    createdBy,
-                    createdAt:new Date()
+                    createdBy:value,
+                    createdAt:new Date().toISOString()
+                
 				});
-				response.status(httpStatus.OK).send([result].map(userResponse)[0]);
+               
+				response.status(httpStatus.OK).send({
+                    "policy": {
+                      "id": result.policyId,
+                      "status": result.status
+                    }
+                  });
 				logger.fatal(`request completed ${request.headers["x-request-id"]}`);
 				return null;
 			} catch (error) {
+            
 				logger.error(error);
 				response
 					.status(httpStatus.INTERNAL_SERVER_ERROR)
-					.send(httpStatus.INTERNAL_SERVER_ERROR);
+					.send({"error": {
+                        "code": httpStatus.INTERNAL_SERVER_ERROR,
+                        "message": "Unexpected error",
+                        "data": error.message,
+                        "type": "System Error",
+                        "path": request.path
+                      }});
 				return undefined;
 			}
 		},
@@ -80,20 +106,45 @@ function definePolicyRoutes(expressApp)
 
     policyRouter.get("/", async (request, response) => {
         try{
-            if (Object.keys(request.query).length === 0) {
-                const result = await Policy.find({});
-                response.status(httpStatus.OK).send(result.map(userResponse));
+          
+            
+            const {domain,type,country,city,status}=request.query
+            let key=Object.values(request.query)
+            let filter="0"
+            if(key.includes("all")||key.includes("All")|| key.includes("ALL"))
+            {
+                filter="1"
+            }
+           if((Object.keys(request.query).length === 0) || (filter==="1" ))
+            {
+              
+                const result = await Policy.find();
+                const policyList=result.map(userResponse)
+                response.status(httpStatus.OK).send({policies:policyList});
                 logger.fatal(`request completed ${request.headers["x-request-id"]}`);
                 return undefined;
             }
-            response.status(httpStatus.OK).send([]);
+            else
+            {
+                const result = await Policy.find(Object.keys(request.query).length === 0 ? {}: request.query);
+                const policyList=result.map(userResponse)
+                response.status(httpStatus.OK).send({policies:policyList});
                 logger.fatal(`request completed ${request.headers["x-request-id"]}`);
                 return undefined;
+            }
+           
+              
         }catch (error) {
 			logger.error(error);
 			response
 				.status(httpStatus.INTERNAL_SERVER_ERROR)
-				.send(httpStatus.INTERNAL_SERVER_ERROR);
+				.send({"error": {
+                    "code": httpStatus.INTERNAL_SERVER_ERROR,
+                    "message": "Unexpected error",
+                    "data": error.message,
+                    "type": "System Error",
+                    "path": request.path
+                  }});
 			return undefined;
 		}
        
@@ -103,52 +154,111 @@ function definePolicyRoutes(expressApp)
 
         try {
 			const { policyId } = request.params;
-			const result = await Policy.find({ policyId: policyId });
-			response.status(httpStatus.OK).send(result.map(userResponse));
+			const result = await Policy.findOne({ policyId: policyId });
+            if (!result) {
+				response
+					.status(httpStatus.BAD_REQUEST)
+					.send({"error": {
+                        "code": httpStatus.BAD_REQUEST,
+                        "message": "Invalid Policy ID",
+                        "data":"Policy does not exists",
+                        "type": "Bad request",
+                        "path": request.path
+                      }});
+            
+                    }
+            else{
+                response.status(httpStatus.OK).send({policy:{
+                    "id": result.policyId,
+                    "status": result.status,
+                    "domain": result.domain,
+                    "type": result.type,
+                    "country": result.country,
+                    "city": result.city,
+                    "name": result.name,
+                    "description": result.description,
+                    "owner": result.owner,
+                    "contactEmail": result.contactEmail,
+                    "policyDocuments": result.policyDocuments,
+                    "startDate": result.startDate,
+                    "endDate": result.endDate,
+                    "applicableTo": result.applicableTo,
+                    "polygon": result.polygon,
+                    "rules": result.rules,
+                    "createdBy": result.createdBy,
+                    "createdAt": result.createdAt,
+                    "latModifiedBy": result.modifiedBy,
+                    "lastModifiedAt": result.modifiedAt
+                  }});
+            }
+			
 			logger.fatal(`request completed ${request.headers["x-request-id"]}`);
 			return undefined;
 		} catch (error) {
 			logger.error(error);
 			response
 				.status(httpStatus.INTERNAL_SERVER_ERROR)
-				.send(httpStatus.INTERNAL_SERVER_ERROR);
+				.send({"error": {
+                    "code": httpStatus.INTERNAL_SERVER_ERROR,
+                    "message": "Unexpected error",
+                    "data": error.message,
+                    "type": "System Error",
+                    "path": request.path
+                  }});
 			return undefined;
 		}
 
     })
-    policyRouter.get("/:domain/:type/:country/:city/:status", async (request, response) => {
-       
-        try {
-            const {domain,type,country,city,status}=request.params
-			const result = await Policy.findOne({$and:[{ domain: domain },{type:type},{country:country},{city:city},{status:status}]});
-			response.status(httpStatus.OK).send(result);
-			logger.fatal(`request completed ${request.headers["x-request-id"]}`);
-			return undefined;
-		} catch (error) {
-			logger.error(error);
-			response
-				.status(httpStatus.INTERNAL_SERVER_ERROR)
-				.send(httpStatus.INTERNAL_SERVER_ERROR);
-			return undefined;
-		}
-    })
+   
     policyRouter.patch("/",async(request,response)=>{
        
         try {
-            const {policyId,status,modifiedBy}=request.body
-			const result = await Policy.findOneAndUpdate({policyId:policyId},{ $set: { status: status,modifiedBy: modifiedBy,modifiedAt:new Date()}});
-			response.status(httpStatus.OK).send(result);
+            const {id,status,modifiedBy}=request.body.policy
+            const value = modifiedBy ? modifiedBy : "system"
+			const result = await Policy.findOneAndUpdate({policyId:id},{ $set: { status: status,modifiedBy: value,modifiedAt:new Date().toISOString()
+        }},{
+                new: true
+              });
+
+              if (!result) {
+				response
+					.status(httpStatus.BAD_REQUEST)
+					.send({"error": {
+                        "code": httpStatus.BAD_REQUEST,
+                        "message": "Invalid Policy ID",
+                        "data":"Policy does not exists",
+                        "type": "Bad request",
+                        "path": request.path
+                      }});
+				logger.fatal(`validation error ${request.headers["x-request-id"]}`);
+				return null;
+			}
+            else{
+                response.status(httpStatus.OK).send({
+                    "policy": {
+                      "id": result.policyId,
+                      "status": result.status
+                    }
+                  });
+            }
+		
 			logger.fatal(`request completed ${request.headers["x-request-id"]}`);
 			return undefined;
 		} catch (error) {
 			logger.error(error);
 			response
 				.status(httpStatus.INTERNAL_SERVER_ERROR)
-				.send(httpStatus.INTERNAL_SERVER_ERROR);
+				.send({"error": {
+                    "code": httpStatus.INTERNAL_SERVER_ERROR,
+                    "message": "Unexpected error",
+                    "data": error.message,
+                    "type": "System Error",
+                    "path": request.path
+                  }});
 			return undefined;
 		}
     })
-    expressApp.use("/api/policy/v1", policyRouter);
+    expressApp.use("/v1/policy", policyRouter);
 
 }
 module.exports = definePolicyRoutes;
