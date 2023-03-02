@@ -41,7 +41,6 @@ const policyResponse = ({
         polygon
 });
 
-const userResponse=({policyId,status,name,description,startDate,endDate})=>({policyId,status,name,description,startDate,endDate})
 
 function definePolicyRoutes(expressApp)
 {
@@ -204,18 +203,35 @@ function definePolicyRoutes(expressApp)
             }
            if((Object.keys(request.query).length === 0) || (filter==="1" ))
             {
-              
+                
                 const result = await Policy.find();
-                const policyList=result.map(userResponse)
-                response.status(httpStatus.OK).send({policies:policyList});
+                const mappedData=result.map((item)=>({
+                    id:item.policyId,
+                    status:item.status,
+                    name:item.name,
+                    description:item.description,
+                    startDate:item.startDate,
+                    endDate:item.endDate
+
+
+                }))
+               
+                response.status(httpStatus.OK).send({policies:mappedData});
                 logger.fatal(`request completed ${request.headers["x-request-id"]}`);
                 return undefined;
             }
             else
             {
                 const result = await Policy.find(Object.keys(request.query).length === 0 ? {}: request.query);
-                const policyList=result.map(userResponse)
-                response.status(httpStatus.OK).send({policies:policyList});
+                const mappedData=result.map((item)=>({
+                    id:item.policyId,
+                    status:item.status,
+                    name:item.name,
+                    description:item.description,
+                    startDate:item.startDate,
+                    endDate:item.endDate
+                }))
+                response.status(httpStatus.OK).send({policies:mappedData});
                 logger.fatal(`request completed ${request.headers["x-request-id"]}`);
                 return undefined;
             }
