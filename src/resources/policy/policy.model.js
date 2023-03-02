@@ -29,6 +29,14 @@ const policySchema=new Schema({
 		required: true,
 	},
     owner:{
+		type: String, 
+		required: true,
+	},
+	contactEmail:{
+		type: String,
+		required: true,
+	},
+	policyDocuments:{
 		type: String,
 		required: true,
 	},
@@ -52,7 +60,7 @@ const policySchema=new Schema({
     
     status: {
 		type: String,
-		enum: ["active", "inActive","published"],
+		enum: ["active", "inactive","published"],
 		default: "active",
 	},
     createdBy:{
@@ -63,22 +71,19 @@ const policySchema=new Schema({
     },
     createdAt:{
         
-        type: Date,
+        type: String,
         required: true,
     
-},
-modifiedBy:{
-        
+	},
+	rules:{
+		type:Object
+	},
+modifiedBy:{     
     type: String
-    
-
-},
-modifiedAt:{
-
-type: Date
-
-
-}
+	},
+		modifiedAt:{
+type: String
+	}
 })
 const Policy = model("policies", policySchema);
 
