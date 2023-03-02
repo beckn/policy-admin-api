@@ -52,7 +52,95 @@ function definePolicyRoutes(expressApp)
 			try {
 				
                 const {status,domain,type,country,city,name,description,owner,rules,contactEmail,policyDocuments,startDate,endDate,applicableTo,polygon,createdBy}=request.body.policy
-
+                if (typeof domain !== "string") {
+                    response
+                        .status(httpStatus.BAD_REQUEST)
+                        .send({"error": {
+                            "code": httpStatus.BAD_REQUEST,
+                            "message": "Invalid_domain",
+                            "path": request.path
+                          }});
+                    logger.fatal(`validation error ${request.headers["x-request-id"]}`);
+                    return null;
+                }
+                if (typeof name !== "string") {
+                    response
+                        .status(httpStatus.BAD_REQUEST)
+                        .send({"error": {
+                            "code": httpStatus.BAD_REQUEST,
+                            "message": "Invalid_name",
+                            "path": request.path
+                          }});
+                    logger.fatal(`validation error ${request.headers["x-request-id"]}`);
+                    return null;
+                }
+                if (typeof status !== "string") {
+                    response
+                        .status(httpStatus.BAD_REQUEST)
+                        .send({"error": {
+                            "code": httpStatus.BAD_REQUEST,
+                            "message": "Invalid_status",
+                            "path": request.path
+                          }});
+                    logger.fatal(`validation error ${request.headers["x-request-id"]}`);
+                    return null;
+                }
+                if (typeof type !== "string") {
+                    response
+                        .status(httpStatus.BAD_REQUEST)
+                        .send({"error": {
+                            "code": httpStatus.BAD_REQUEST,
+                            "message": "Invalid_type",
+                            "path": request.path
+                          }});
+                    logger.fatal(`validation error ${request.headers["x-request-id"]}`);
+                    return null;
+                }
+                if (typeof country !== "string") {
+                    response
+                        .status(httpStatus.BAD_REQUEST)
+                        .send({"error": {
+                            "code": httpStatus.BAD_REQUEST,
+                            "message": "Invalid_country",
+                            "path": request.path
+                          }});
+                    logger.fatal(`validation error ${request.headers["x-request-id"]}`);
+                    return null;
+                }
+                if (typeof city !== "string") {
+                    response
+                        .status(httpStatus.BAD_REQUEST)
+                        .send({"error": {
+                            "code": httpStatus.BAD_REQUEST,
+                            "message": "Invalid_city",
+                            "path": request.path
+                          }});
+                    logger.fatal(`validation error ${request.headers["x-request-id"]}`);
+                    return null;
+                }
+                if (typeof description !== "string") {
+                    response
+                        .status(httpStatus.BAD_REQUEST)
+                        .send({"error": {
+                            "code": httpStatus.BAD_REQUEST,
+                            "message": "Invalid_description",
+                            "path": request.path
+                          }});
+                    logger.fatal(`validation error ${request.headers["x-request-id"]}`);
+                    return null;
+                }
+                if (typeof owner !== "string") {
+                    response
+                        .status(httpStatus.BAD_REQUEST)
+                        .send({"error": {
+                            "code": httpStatus.BAD_REQUEST,
+                            "message": "Invalid_owner",
+                            "path": request.path
+                          }});
+                    logger.fatal(`validation error ${request.headers["x-request-id"]}`);
+                    return null;
+                }
+               
 				const policyId = uuidv4();
                 
                  const value = createdBy ? createdBy : "system"
@@ -106,9 +194,8 @@ function definePolicyRoutes(expressApp)
 
     policyRouter.get("/", async (request, response) => {
         try{
-          
-            
             const {domain,type,country,city,status}=request.query
+            
             let key=Object.values(request.query)
             let filter="0"
             if(key.includes("all")||key.includes("All")|| key.includes("ALL"))
@@ -160,9 +247,8 @@ function definePolicyRoutes(expressApp)
 					.status(httpStatus.BAD_REQUEST)
 					.send({"error": {
                         "code": httpStatus.BAD_REQUEST,
-                        "message": "Invalid Policy ID",
-                        "data":"Policy does not exists",
-                        "type": "Bad request",
+                        "message": "Invalid_policyId",
+                        "type": "Bad_request",
                         "path": request.path
                       }});
             
@@ -214,6 +300,50 @@ function definePolicyRoutes(expressApp)
        
         try {
             const {id,status,modifiedBy}=request.body.policy
+            
+                if(!Boolean(id))
+                {
+                    response
+					.status(httpStatus.BAD_REQUEST)
+					.send({"error": {
+                        "code": httpStatus.BAD_REQUEST,
+                        "message": "Invalid_policyId",
+                        "type": "Bad_request",
+                        "path": request.path
+                      }});
+				logger.fatal(`validation error ${request.headers["x-request-id"]}`);
+				return null;
+                }
+
+                if(!Boolean(status))
+                {
+                    response
+					.status(httpStatus.BAD_REQUEST)
+					.send({"error": {
+                        "code": httpStatus.BAD_REQUEST,
+                        "message": "Invalid_status",
+                        "type": "Bad_request",
+                        "path": request.path
+                      }});
+				logger.fatal(`validation error ${request.headers["x-request-id"]}`);
+				return null;
+                }
+                if(status!="active"||status!="inactive"||status!="published")
+                {
+                    response
+					.status(httpStatus.BAD_REQUEST)
+					.send({"error": {
+                        "code": httpStatus.BAD_REQUEST,
+                        "message": "Invalid_status",
+                        "type": "Bad_request",
+                        "path": request.path
+                      }});
+				logger.fatal(`validation error ${request.headers["x-request-id"]}`);
+				return null;
+                }
+
+
+
             const value = modifiedBy ? modifiedBy : "system"
 			const result = await Policy.findOneAndUpdate({policyId:id},{ $set: { status: status,modifiedBy: value,modifiedAt:new Date().toISOString()
         }},{
@@ -225,9 +355,9 @@ function definePolicyRoutes(expressApp)
 					.status(httpStatus.BAD_REQUEST)
 					.send({"error": {
                         "code": httpStatus.BAD_REQUEST,
-                        "message": "Invalid Policy ID",
+                        "message": "Invalid_policyId",
                         "data":"Policy does not exists",
-                        "type": "Bad request",
+                        "type": "Bad_request",
                         "path": request.path
                       }});
 				logger.fatal(`validation error ${request.headers["x-request-id"]}`);
