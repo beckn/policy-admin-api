@@ -34,11 +34,11 @@ const policySchema=new Schema({
 	},
 	contactEmail:{
 		type: String,
-		required: true,
+		
 	},
 	policyDocuments:{
 		type: String,
-		required: true,
+		
 	},
     startDate:{
 		type: Date,
