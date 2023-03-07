@@ -43,11 +43,18 @@ async function startWebServer() {
 
 	expressApp.use(
 		cors({
-			credentials: true,
+			methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
 			origin: "*",
-			methods: ["GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH"],
-		}),
+			optionsSuccessStatus: 201,
+			credentials: true,
+		  }),
 	);
+
+	expressApp.use((req, res, next) => {
+		res.header('Access-Control-Allow-Origin', '*');
+		next();
+	  });
+
 
 	// routes
 	defineHealthRoutes(expressApp);
