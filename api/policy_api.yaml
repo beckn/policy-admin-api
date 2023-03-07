@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 0.1.0
+  version: 0.1.1
   title: Policy API
   description: API to manage policy flow.
 paths:
@@ -246,7 +246,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreatePolicyV2'
+                $ref: '#/components/schemas/CreatePolicyResponse'
         '404':
           description: Policy creation failed
           content:
@@ -877,4 +877,3 @@ security:
 servers:
   - url: https://api.policy.becknprotocol.io
     variables: {}
-    
