@@ -1,13 +1,13 @@
 openapi: 3.0.0
 info:
-  version: 0.0.3
+  version: 0.1.0
   title: Policy API
   description: API to manage policy flow.
 paths:
   /v1/policy:
     post:
       tags:
-        - Policy
+        - Policy v1
       summary: Create Policy
       requestBody:
         description: Policy details
@@ -51,7 +51,7 @@ paths:
                   path: "/v1/policy"
     patch:
       tags:
-        - Policy
+        - Policy v1
       summary: Update Policy Status
       requestBody:
         description: Policy status details
@@ -95,7 +95,7 @@ paths:
                   path: "/v1/policy"
     get:
       tags:
-        - Policy
+        - Policy v1
       summary: Get Policies 
       parameters:
         - name: domain
@@ -184,7 +184,7 @@ paths:
   /v1/policy/{policyId}:
     get:
       tags:
-        - Policy
+        - Policy v1
       summary: Get Policy Details 
       parameters:
         - name: policyId
@@ -202,6 +202,230 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PolicyDetails'
+        '404':
+          description: Policy details could not be retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  code: "404"
+                  message: "Policy details could not be retrieved"
+                  data: "Long descriptive message"
+                  type: "Application error"
+                  path: "/v1/policy/{policyId}"
+        '500':
+          description: Policy details could not be retrieved due to unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  code: "500"
+                  message: "Error processing request {specific error log from exception/error}"
+                  data: "Additional error message/logs"
+                  type: "System error"
+                  path: "/v1/policy/{policyId}"
+  /v2/policy:
+    post:
+      tags:
+        - Policy v2
+      summary: Create Policy
+      requestBody:
+        description: Policy details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePolicyV2'
+      responses:
+        '200':
+          description: Policy created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatePolicyV2'
+        '404':
+          description: Policy creation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  code: "404"
+                  message: "Policy could not be created"
+                  data: "Long descriptive message"
+                  type: "Application error"
+                  path: "/v2/policy"
+        '500':
+          description: Policy could not be created due to unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  code: "500"
+                  message: "Error processing request {specific error log from exception/error}"
+                  data: "Additional error message/logs"
+                  type: "System error"
+                  path: "/v2/policy"
+    patch:
+      tags:
+        - Policy v2
+      summary: Update Policy Status
+      requestBody:
+        description: Policy status details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePolicyStatus'
+      responses:
+        '200':
+          description: Policy status updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatePolicyStatusResponse'
+        '404':
+          description: Policy status update failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  code: "404"
+                  message: "Policy status could not be updated"
+                  data: "Long descriptive message"
+                  type: "Application error"
+                  path: "/v2/policy"
+        '500':
+          description: Policy status could not be updated due to unexpected error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  code: "500"
+                  message: "Error processing request {specific error log from exception/error}"
+                  data: "Additional error message/logs"
+                  type: "System error"
+                  path: "/v2/policy"
+    get:
+      tags:
+        - Policy v2
+      summary: Get Policies 
+      parameters:
+        - name: domain
+          description: Policy domain
+          in: query
+          required: false
+          schema:
+            type: string
+          examples:
+            Get mobility domain policies:
+              value:
+                "mobility"
+        - name: type
+          description: Policy type
+          in: query
+          required: false
+          schema:
+            type: string
+          examples:
+            Get geofence policies:
+              value:
+                "GeofencePolicy"
+        - name: county
+          description: Policy county
+          in: query
+          required: false
+          schema:
+            type: string
+          examples:
+            Get policies created for India:
+              value:
+                "IND"
+        - name: city
+          description: Policy city
+          in: query
+          required: false
+          schema:
+            type: string
+          examples:
+            Get policies created for Bengaluru:
+              value:
+                "std:080"
+        - name: status
+          description: Policy status
+          in: query
+          required: false
+          schema:
+            type: string
+          examples:
+            Get published policies:
+              value:
+                "published"
+      responses:
+        '200':
+          description: Requested policies retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPoliciesResponse'
+        '404':
+          description: Requested policies could not be retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  code: "404"
+                  message: "Requested policies could not be retrieved"
+                  data: "Long descriptive message"
+                  type: "Application error"
+                  path: "/v1/policy/{domain}/{type}/{county}/{city}/{status}"
+        '500':
+          description: Requestd policies could not be retrieved due to unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  code: "500"
+                  message: "Error processing request {specific error log from exception/error}"
+                  data: "Additional error message/logs"
+                  type: "System error"
+                  path: "/v1/policy/{domain}/{type}/{county}/{city}/{status}"
+  /v2/policy/{policyId}:
+    get:
+      tags:
+        - Policy v2
+      summary: Get Policy Details 
+      parameters:
+        - name: policyId
+          description: Policy Id
+          in: path
+          required: true
+          schema:
+            type: string
+          example:
+            "123456"
+      responses:
+        '200':
+          description: Policy details retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PolicyDetailsV2'
         '404':
           description: Policy details could not be retrieved
           content:
@@ -451,6 +675,152 @@ components:
             lastModifiedAt:
               description: Policy updation timestamp
               type: string
+    PolicyV2:
+      description: Schema for Policy v2 object
+      type: object
+      required:
+        - status
+        - domain
+        - owner
+        - descriptor
+        - type
+        - coverage
+        - geofences
+      properties:
+        id:
+          description: Policy id
+          type: string
+        status:
+          description: Policy status
+          type: string
+        domain:
+          description: Policy domain
+          type: string
+        owner:
+          type: object
+          properties:
+            descriptor:
+              type: object
+              properties:
+                name:
+                  description: Policy owner name
+                  type: string
+                contact:
+                  type: object
+                  properties:
+                    email:
+                      description: Policy owner contact email
+                      type: string
+        descriptor:
+          type: object
+          properties:
+            name:
+              description : Policy name
+              type: string
+            short_desc:
+              description: Policy description
+              type: string
+        media:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaData'
+        type:
+          description: Policy type
+          type: string
+        coverage:
+          type: array
+          items:
+            type: object 
+            properties:
+              spatial:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    country:
+                      description: Policy applied to country
+                      type: string
+                    city:
+                      description: Policy applied to city
+                      type: string
+              temporal:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    range:
+                      type: object
+                      properties:
+                        start:
+                          description: Policy start date
+                          type: string
+                        end:
+                          description: Policy end date
+                          type: string
+              subscribers:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type:
+                      description: Policy applicable to
+                      type: string
+        geofences:
+          type: array
+          items:
+            type: object
+            properties:
+              polygon:
+                description: Policy polygon to apply policy
+                type: array
+                items:
+                  type: string
+        rules:
+          description: Policy rules json
+          type: object
+    MediaData:
+      description: Media Data
+      type: object
+      properties:
+        mimetype:
+          type: string
+          description: mimetype
+        url:
+          type: string
+          description: mimetype
+    CreatePolicyV2:
+      description: Schema for Policy creation v2
+      type: object
+      properties:
+        policy:
+          type: object
+          required:
+            - status
+            - domain
+            - owner
+            - descriptor
+            - type
+            - coverage
+            - geofences
+          allOf:  
+            - $ref: '#/components/schemas/PolicyV2'
+    PolicyDetailsV2:
+      description: Schema for Policy details v2
+      type: object
+      properties:
+        policy:
+          type: object
+          required:
+            - id
+            - status
+            - domain
+            - owner
+            - descriptor
+            - type
+            - coverage
+            - geofences
+          allOf:  
+            - $ref: '#/components/schemas/PolicyV2'
     Context:
       description: Policy schema context object
       type: object
