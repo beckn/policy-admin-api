@@ -52,7 +52,7 @@ async function startWebServer() {
 	);
 
 	expressApp.use((req, res, next) => {
-		console.log("Request:::",req.body)
+		
 		res.header('Access-Control-Allow-Origin', '*');
 		next();
 	  });
