@@ -17,6 +17,7 @@ const config =require("./config") ;
 
 const defineHealthRoutes = require("./resources/health");
 const definePolicyRoutes = require("./resources/policy");
+const definePolicyV2Routes = require("./resources/policy_v2");
 
 async function startWebServer() {
 	// EventEmitter memory leak detected
@@ -51,6 +52,7 @@ async function startWebServer() {
 	);
 
 	expressApp.use((req, res, next) => {
+		console.log("Request:::",req.body)
 		res.header('Access-Control-Allow-Origin', '*');
 		next();
 	  });
@@ -59,6 +61,7 @@ async function startWebServer() {
 	// routes
 	defineHealthRoutes(expressApp);
 	definePolicyRoutes(expressApp);
+	definePolicyV2Routes(expressApp);
 
 	// send back a 404 error for any unknown api request
 	expressApp.use((req, res, next) => {
