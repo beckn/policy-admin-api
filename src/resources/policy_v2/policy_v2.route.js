@@ -143,9 +143,9 @@ function definePolicyV2Routes(expressApp) {
   policyV2Router.get("/:policyId", async (request, response) => {
     try {
       const { policyId } = request.params;
-    
+
       const result = await Policy.findOne({ policyId: policyId });
-    
+
       if (!result) {
         response.status(httpStatus.BAD_REQUEST).send({
           error: {
@@ -156,17 +156,19 @@ function definePolicyV2Routes(expressApp) {
           },
         });
       } else {
-        response.status(httpStatus.OK).send({policy:{
-          "id": result.policyId,
-          "status": result.status,
-          "domain": result.domain,
-          "owner":result.owner,
-          "descriptor":result.descriptor,
-          "type":result.type,
-          "coverage":result.coverage,
-          "geofences":result.geofences,
-          "rules":result.rules
-        }});
+        response.status(httpStatus.OK).send({
+          policy: {
+            "id": result.policyId,
+            "status": result.status,
+            "domain": result.domain,
+            "owner": result.owner,
+            "descriptor": result.descriptor,
+            "type": result.type,
+            "coverage": result.coverage,
+            "geofences": result.geofences,
+            "rules": result.rules
+          }
+        });
       }
 
       logger.fatal(`request completed ${request.headers["x-request-id"]}`);
@@ -186,102 +188,112 @@ function definePolicyV2Routes(expressApp) {
     }
   });
 
-  policyV2Router.patch("/",async(request,response)=>{
-       
+  policyV2Router.patch("/", async (request, response) => {
+
     try {
-        const {id,status,modifiedBy}=request.body.policy
-       
-       const policy_status=status.toLowerCase()
-            if(!Boolean(id))
-            {
-                response
-      .status(httpStatus.BAD_REQUEST)
-      .send({"error": {
-                    "code": httpStatus.BAD_REQUEST,
-                    "message": "Invalid_policyId",
-                    "type": "Bad_request",
-                    "path": request.path
-                  }});
-    logger.fatal(`validation error ${request.headers["x-request-id"]}`);
-    return null;
+      const { id, status, modifiedBy } = request.body.policy
+
+      const policy_status = status.toLowerCase()
+      if (!Boolean(id)) {
+        response
+          .status(httpStatus.BAD_REQUEST)
+          .send({
+            "error": {
+              "code": httpStatus.BAD_REQUEST,
+              "message": "Invalid_policyId",
+              "type": "Bad_request",
+              "path": request.path
             }
-
-            if(!Boolean(status))
-            {
-            
-                response
-      .status(httpStatus.BAD_REQUEST)
-      .send({"error": {
-                    "code": httpStatus.BAD_REQUEST,
-                    "message": "Invalid_status",
-                    "type": "Bad_request",
-                    "path": request.path
-                  }});
-    logger.fatal(`validation error ${request.headers["x-request-id"]}`);
-    return null;
-            }
-            if(policy_status!=="active" && policy_status!=="inactive" && policy_status!=="published")
-            {
-                
-                response
-      .status(httpStatus.BAD_REQUEST)
-      .send({"error": {
-                    "code": httpStatus.BAD_REQUEST,
-                    "message": "Invalid_status",
-                    "type": "Bad_request",
-                    "path": request.path
-                  }});
-    logger.fatal(`validation error ${request.headers["x-request-id"]}`);
-    return null;
-            }
-
-
-
-        const value = modifiedBy ? modifiedBy : "system"
-  const result = await Policy.findOneAndUpdate({policyId:id},{ $set: { status: policy_status,modifiedBy: value,modifiedAt:new Date().toISOString()
-    }},{
-            new: true
           });
-        
+        logger.fatal(`validation error ${request.headers["x-request-id"]}`);
+        return null;
+      }
 
-          if (!result) {
-    response
-      .status(httpStatus.BAD_REQUEST)
-      .send({"error": {
-                    "code": httpStatus.BAD_REQUEST,
-                    "message": "Invalid_policyId",
-                    "data":"Policy does not exists",
-                    "type": "Bad_request",
-                    "path": request.path
-                  }});
-    logger.fatal(`validation error ${request.headers["x-request-id"]}`);
-    return null;
-  }
-        else{
-            response.status(httpStatus.OK).send({
-                "policy": {
-                  "id": result.policyId,
-                  "status": result.status
-                }
-              });
+      if (!Boolean(status)) {
+
+        response
+          .status(httpStatus.BAD_REQUEST)
+          .send({
+            "error": {
+              "code": httpStatus.BAD_REQUEST,
+              "message": "Invalid_status",
+              "type": "Bad_request",
+              "path": request.path
+            }
+          });
+        logger.fatal(`validation error ${request.headers["x-request-id"]}`);
+        return null;
+      }
+      if (policy_status !== "active" && policy_status !== "inactive" && policy_status !== "published") {
+
+        response
+          .status(httpStatus.BAD_REQUEST)
+          .send({
+            "error": {
+              "code": httpStatus.BAD_REQUEST,
+              "message": "Invalid_status",
+              "type": "Bad_request",
+              "path": request.path
+            }
+          });
+        logger.fatal(`validation error ${request.headers["x-request-id"]}`);
+        return null;
+      }
+
+
+
+      const value = modifiedBy ? modifiedBy : "system"
+      const result = await Policy.findOneAndUpdate({ policyId: id }, {
+        $set: {
+          status: policy_status, modifiedBy: value, modifiedAt: new Date().toISOString()
         }
+      }, {
+        new: true
+      });
 
-  logger.fatal(`request completed ${request.headers["x-request-id"]}`);
-  return undefined;
-} catch (error) {
-  logger.error(error);
-  response
-    .status(httpStatus.INTERNAL_SERVER_ERROR)
-    .send({"error": {
-                "code": httpStatus.INTERNAL_SERVER_ERROR,
-                "message": "Unexpected error",
-                "data": error.message,
-                "type": "System Error",
-                "path": request.path
-              }});
-  return undefined;
-}
-})
+
+      if (!result) {
+        response
+          .status(httpStatus.BAD_REQUEST)
+          .send({
+            "error": {
+              "code": httpStatus.BAD_REQUEST,
+              "message": "Invalid_policyId",
+              "data": "Policy does not exists",
+              "type": "Bad_request",
+              "path": request.path
+            }
+          });
+        logger.fatal(`validation error ${request.headers["x-request-id"]}`);
+        return null;
+      }
+      else {
+        response.status(httpStatus.OK).send({
+          "policy": {
+            "id": result.policyId,
+            "status": result.status
+          }
+        });
+      }
+
+      logger.fatal(`request completed ${request.headers["x-request-id"]}`);
+      return undefined;
+    } catch (error) {
+      logger.error(error);
+      response
+        .status(httpStatus.INTERNAL_SERVER_ERROR)
+        .send({
+          "error": {
+            "code": httpStatus.INTERNAL_SERVER_ERROR,
+            "message": "Unexpected error",
+            "data": error.message,
+            "type": "System Error",
+            "path": request.path
+          }
+        });
+      return undefined;
+    }
+  })
 
   expressApp.use("/v2/policy", policyV2Router);
 }

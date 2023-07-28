@@ -1,0 +1,8 @@
+.background-img{
+
+  height: 100vh;
+  width: 100%;
+  background-image: url("image.jpg");
+  background-attachment: fixed;
+  background-size: cover;
+}
