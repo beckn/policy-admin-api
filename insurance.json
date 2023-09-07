@@ -1,0 +1,82 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "title": "InsurancePolicy",
+    "description": "A schema to define an insurance policy with custom policy rules.",
+    "properties": {
+        "policyId": {
+            "description": "Unique ID of the policy",
+            "type": "string",
+            "format": "uuid"
+        },
+        "status": {
+            "description": "Status of the policy - ACTIVE, INACTIVE.",
+            "type": "string",
+            "enum": [
+                "ACTIVE",
+                "INACTIVE"
+            ]
+        },
+        "insuredPerson": {
+            "description": "Information about the insured person.",
+            "type": "object",
+            "properties": {
+                "firstName": {
+                    "description": "First name of the insured person.",
+                    "type": "string"
+                },
+                "lastName": {
+                    "description": "Last name of the insured person.",
+                    "type": "string"
+                },
+                "dateOfBirth": {
+                    "description": "Date of birth of the insured person.",
+                    "type": "string",
+                    "format": "date"
+                }
+            },
+            "required": ["firstName", "lastName"]
+        },
+        "insuranceType": {
+            "description": "Type of insurance coverage.",
+            "type": "string"
+        },
+        "coveragePeriod": {
+            "description": "Information about the coverage period.",
+            "type": "object",
+            "properties": {
+                "startDate": {
+                    "description": "Start date of coverage.",
+                    "type": "string",
+                    "format": "date"
+                },
+                "endDate": {
+                    "description": "End date of coverage.",
+                    "type": "string",
+                    "format": "date"
+                }
+            }
+        },
+        "customPolicies": {
+            "description": "List of custom policy rules.",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "ruleName": {
+                        "description": "Name of the custom policy rule.",
+                        "type": "string"
+                    },
+                    "ruleDescription": {
+                        "description": "Description of the custom policy rule.",
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "required": ["policyId", "status", "insuredPerson", "insuranceType", "coveragePeriod"]
+}
+
+
+
