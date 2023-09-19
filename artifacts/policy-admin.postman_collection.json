@@ -1,121 +1,241 @@
 {
 	"info": {
-		"_postman_id": "9c2be5f4-4cd2-4197-aaea-e157acde8d35",
+		"_postman_id": "3185a22b-993c-482d-b010-33541198d861",
 		"name": "policy-admin",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "1935896"
 	},
 	"item": [
 		{
-			"name": "Create Policy",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"policy\": {\n    \"domain\": \"mobility\",\n    \"type\": \"geofence\",\n    \"country\": \"India\",\n    \"city\": \"Pune\",\n    \"name\": \"Restricted zone\",\n    \"description\": \"Avoid going to specific area due to international summit\",\n    \"owner\": \"Ministry of Transport\",\n    \"contactEmail\": \"test.user1@gmail.com\",\n    \"startDate\": \"2023-03-06\",\n    \"endDate\": \"2023-03-08\",\n    \"applicableTo\": [\n      \"BAP\",\n      \"BPP\"\n    ],\n    \"polygon\": [\n      \"22.435334,77.8793843\",\n      \"22.435334,77.8793843\",\n      \"22.435334,77.8793843\",\n      \"22.435334,77.8793843\",\n      \"22.435334,77.8793843\",\n      \"22.435334,77.8793843\",\n      \"22.435334,77.8793843\",\n      \"22.435334,77.8793843\"\n    ],\n    \"status\": \"active\",\n    \"createdBy\": \"Rahul Choudhary\"\n  }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "v1",
+			"item": [
+				{
+					"name": "Create Policy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"policy\": {\n    \"domain\": \"mobility\",\n    \"type\": \"geofence\",\n    \"country\": \"India\",\n    \"city\": \"Pune\",\n    \"name\": \"Restricted zone 1\",\n    \"description\": \"Avoid going to specific area due to international summit\",\n    \"owner\": \"Ministry of Transport\",\n    \"contactEmail\": \"test.user1@gmail.com\",\n    \"startDate\": \"2023-03-06\",\n    \"endDate\": \"2023-03-08\",\n    \"applicableTo\": [\n      \"BAP\",\n      \"BPP\"\n    ],\n    \"polygon\": [\n      \"22.435334,77.8793843\",\n      \"22.435334,77.8793843\",\n      \"22.435334,77.8793843\",\n      \"22.435334,77.8793843\",\n      \"22.435334,77.8793843\",\n      \"22.435334,77.8793843\",\n      \"22.435334,77.8793843\",\n      \"22.435334,77.8793843\"\n    ],\n    \"status\": \"active\",\n    \"createdBy\": \"Rahul Choudhary\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.policy-admin.becknprotocol.io/v1/policy",
+							"protocol": "https",
+							"host": [
+								"api",
+								"policy-admin",
+								"becknprotocol",
+								"io"
+							],
+							"path": [
+								"v1",
+								"policy"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://api.policy-admin.becknprotocol.io:8080/v1/policy",
-					"protocol": "http",
-					"host": [
-						"api",
-						"policy-admin",
-						"becknprotocol",
-						"io"
-					],
-					"port": "8080",
-					"path": [
-						"v1",
-						"policy"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Update Policy Status",
-			"request": {
-				"method": "PATCH",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"policy\": {\n    \"id\": \"79b57fd2-27a5-4eba-b6e5-14888d910099\",\n    \"status\": \"published\",\n    \"modifiedBy\": \"Policy Admin\"\n  }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+				{
+					"name": "Update Policy Status",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"policy\": {\n    \"id\": \"e344b015-be8d-4364-9c14-23ffa5b0f712\",\n    \"status\": \"inactive\",\n    \"modifiedBy\": \"Policy Admin\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.policy-admin.becknprotocol.io/v1/policy",
+							"protocol": "https",
+							"host": [
+								"api",
+								"policy-admin",
+								"becknprotocol",
+								"io"
+							],
+							"path": [
+								"v1",
+								"policy"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://api.policy-admin.becknprotocol.io:8080/v1/policy",
-					"protocol": "http",
-					"host": [
-						"api",
-						"policy-admin",
-						"becknprotocol",
-						"io"
-					],
-					"port": "8080",
-					"path": [
-						"v1",
-						"policy"
-					]
+				{
+					"name": "Get All Policies",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.policy-admin.becknprotocol.io/v1/policy",
+							"protocol": "https",
+							"host": [
+								"api",
+								"policy-admin",
+								"becknprotocol",
+								"io"
+							],
+							"path": [
+								"v1",
+								"policy"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Policy Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.policy-admin.becknprotocol.io/v1/policy/e344b015-be8d-4364-9c14-23ffa5b0f712",
+							"protocol": "https",
+							"host": [
+								"api",
+								"policy-admin",
+								"becknprotocol",
+								"io"
+							],
+							"path": [
+								"v1",
+								"policy",
+								"e344b015-be8d-4364-9c14-23ffa5b0f712"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Get All Policies",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://api.policy-admin.becknprotocol.io:8080/v1/policy",
-					"protocol": "http",
-					"host": [
-						"api",
-						"policy-admin",
-						"becknprotocol",
-						"io"
-					],
-					"port": "8080",
-					"path": [
-						"v1",
-						"policy"
-					]
+			"name": "v2",
+			"item": [
+				{
+					"name": "v2 Create Policy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"policy\": {\n    \"id\": \"\",\n    \"status\" : \"active\",\n    \"domain\" : \"mobility\",\n    \"owner\": {\n        \"descriptor\": {\n            \"name\": \"Ministry of Health\",\n            \"contact\": {\n                \"email\": \"support@moh.gov.in\"\n            }\n        }\n    },\n    \"descriptor\": {\n        \"name\": \"Quarantine Policy\",\n        \"short_desc\": \"Latest quarantine zones as mentioned in Circular 334-A-2022-03-21 published by ministry of Health\"\n    },\n    \"media\": [\n        {\n            \"mimetype\": \"application/pdf\",\n            \"url\": \"https://moh.gov.in/circulars/334-A-2022-03-21.pdf\"\n        }\n    ],\n    \"type\": \"geofence\",\n    \"coverage\": [\n        {\n            \"spatial\": [\n                {\n                    \"country\": \"IND\",\n                    \"city\": \"std:080\"\n                }\n            ],\n            \"temporal\": [\n                {\n                    \"range\": {\n                        \"start\": \"2022-03-09\",\n                        \"end\": \"2022-03-20\"\n                    }\n                }\n            ],\n            \"subscribers\": [\n                {\n                    \"type\": \"bap\"\n                },\n                {\n                    \"type\": \"bpp\"\n                }\n            ]\n        }\n    ],\n    \"geofences\": [\n        {\n            \"polygon\": [\n                \"18.49632198310945, 73.83838330284058\",\n                \"18.486186835168446, 73.84954133969724\",\n                \"18.47438307447668, 73.85155860928064\",\n                \"18.475686643028933, 73.8253797182722\",\n                \"18.489443874240443, 73.82473591029934\"\n            ]\n        }\n    ]\n}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.policy-admin.becknprotocol.io/v2/policy",
+							"protocol": "https",
+							"host": [
+								"api",
+								"policy-admin",
+								"becknprotocol",
+								"io"
+							],
+							"path": [
+								"v2",
+								"policy"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Policy Status Copy",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"policy\": {\n    \"id\": \"26b1bcf6-51f0-4c7a-b503-badbc1105ccb\",\n    \"status\": \"inactive\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.policy-admin.becknprotocol.io/v2/policy",
+							"protocol": "https",
+							"host": [
+								"api",
+								"policy-admin",
+								"becknprotocol",
+								"io"
+							],
+							"path": [
+								"v2",
+								"policy"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "v2 Get All Policies",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.policy-admin.becknprotocol.io/v2/policy",
+							"protocol": "https",
+							"host": [
+								"api",
+								"policy-admin",
+								"becknprotocol",
+								"io"
+							],
+							"path": [
+								"v2",
+								"policy"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "published",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "v2 Get Policy Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.policy-admin.becknprotocol.io/v2/policy/26b1bcf6-51f0-4c7a-b503-badbc1105ccb",
+							"protocol": "https",
+							"host": [
+								"api",
+								"policy-admin",
+								"becknprotocol",
+								"io"
+							],
+							"path": [
+								"v2",
+								"policy",
+								"26b1bcf6-51f0-4c7a-b503-badbc1105ccb"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Policy Details",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://api.policy-admin.becknprotocol.io:8080/v1/policy/79b57fd2-27a5-4eba-b6e5-14888d910099",
-					"protocol": "http",
-					"host": [
-						"api",
-						"policy-admin",
-						"becknprotocol",
-						"io"
-					],
-					"port": "8080",
-					"path": [
-						"v1",
-						"policy",
-						"79b57fd2-27a5-4eba-b6e5-14888d910099"
-					]
-				}
-			},
-			"response": []
+			]
 		}
 	]
 }
