@@ -18,6 +18,7 @@ const config =require("./config") ;
 const defineHealthRoutes = require("./resources/health");
 const definePolicyRoutes = require("./resources/policy");
 const definePolicyV2Routes = require("./resources/policy_v2");
+const defineSellerRoutes = require("./resources/auth");
 
 async function startWebServer() {
 	// EventEmitter memory leak detected
@@ -62,6 +63,7 @@ async function startWebServer() {
 	defineHealthRoutes(expressApp);
 	definePolicyRoutes(expressApp);
 	definePolicyV2Routes(expressApp);
+	defineSellerRoutes(expressApp);
 
 	// send back a 404 error for any unknown api request
 	expressApp.use((req, res, next) => {
@@ -102,7 +104,6 @@ const openConnection = (expressApp) => {
 			// TODO: close worker if server closes
 			mongoose
 				.connect((config.DATABASE_URL),
-					
 					//"mongodb://beckn:becknPasS41@api.policy-admin.becknprotocol.io:27017/policyAdmin?authSource=admin",
 					{
 						autoCreate: true,
