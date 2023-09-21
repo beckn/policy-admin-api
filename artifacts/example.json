@@ -1,0 +1,112 @@
+{
+    "policy": {
+    "id": "c06b6bf1-82e6-4c32-b8a3-91df438f36a19",
+    "status": "active",
+    "domain": "mobility",
+    "owner": {
+      "descriptor": {
+        "name": "Government of India",
+        "contact": {
+          "email": "support@gov.in"
+        }
+      }
+    },
+    "descriptor": {
+      "name": "Government of India",
+      "short_desc": "unified policy for mobility"
+    },
+    "type": "Custom Policy",
+    "coverage": [
+      {
+        "spatial": [
+          {
+            "country": "IND",
+            "city": "std:080"
+          }
+        ],
+        "temporal": [
+          {
+            "range": {
+              "start": "2022-03-09",
+              "end": "2022-03-20"
+            }
+          }
+        ],
+        "subscribers": [
+          {
+            "type": "bap"
+          },
+          {
+            "type": "bpp"
+          }
+        ]
+      }
+    ],
+    "geofences": [
+      {
+        "polygon": [
+          "18.49632198310945, 73.83838330284058",
+          "18.486186835168446, 73.84954133969724",
+          "18.47438307447668, 73.85155860928064",
+          "18.475686643028933, 73.8253797182722",
+          "18.489443874240443, 73.82473591029934"
+        ]
+      }
+    ],
+    "custom_policies": [
+      {
+        "name": "Odd Even Rule",
+        "description": "Restricts vehicles based on odd or even number plates.",
+        "status": "ACTIVE",
+        "temporal": {
+          "start": "2023-09-21T00:00:00Z",
+          "end": "2023-12-31T23:59:59Z"
+        },
+        "rules": {
+          "odd_number_plates": {
+            "allowed": true,
+            "days": ["Monday", "Wednesday", "Friday"]
+          },
+          "even_number_plates": {
+            "allowed": true,
+            "days": ["Tuesday", "Thursday", "Saturday"]
+          },
+          "vehicles": ["Two Wheeler", "Four Wheeler", "Commercial", "Private"]
+        },
+        "exceptions": [
+          {
+            "exception_type": "ambulance",
+            "allowed": true,
+            "reason": "Emergency services are exempted."
+          },
+          {
+            "exception_type": "electric_vehicle",
+            "allowed": true,
+            "reason": "Electric vehicles are exempted."
+          }
+        ]
+      },
+      {
+        "name": "Restricted Goods like Alcohol",
+        "description": "Controls the sale and consumption of alcohol and tobacco.",
+        "status": "ACTIVE",
+        "temporal": {
+          "start": "2023-09-21T00:00:00Z",
+          "end": "2023-12-31T23:59:59Z"
+        },
+        "rules": {
+          "restricted_items": ["Alcohol", "Tobacco"],
+          "allowed_places": ["Education Institutions", "Hospitals"],
+          "age_limit": 18
+        },
+        "exceptions": [
+          {
+            "exception_type": "medical_purpose",
+            "allowed": true,
+            "reason": "For medical purposes."
+          }
+        ]
+      }
+    ]
+    }
+  }
