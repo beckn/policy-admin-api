@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Policy",
+  "description": "A schema to define a unified policy with room for custom policy rules.",
+  "properties": {
+    "id": {
+      "description": "Unique ID of the policy",
+      "type": "string",
+      "format": "uuid"
+    },
+    "status": {
+      "description": "Status of the policy - ACTIVE, INACTIVE.",
+      "type": "string",
+      "enum": ["active", "inactive"]
+    },
+    "domain": { "$ref": "https://github.com/beckn/protocol-specifications/blob/master/schema/Domain.yaml" },
+    "creator": {
+      "$ref": "https://github.com/beckn/protocol-specifications/blob/master/schema/Organization.yaml"
+    },
+    "descriptor": {
+      "$ref": "https://github.com/beckn/protocol-specifications/blob/master/schema/Descriptor.yaml"
+    },
+    "coverage": {
+      "$ref": "./coverage.yaml"
+    },
+    "geofences": { "$ref": "./geofence.yaml" },
+    "custom_policies": {
+      "description": "List of custom policy rules.",
+      "type": "array",
+      "items": {
+        "$ref": "./custom_policy_rule.yaml"
+      }
+    }
+  },
+  "definitions": {
+    "coverage": {
+      "type": "object",
+      "description": "Information about the area and time period for which the policy is applicable.",
+      "properties": {
+        "spatial": {
+          "description": "Information about the area for which the policy is applicable.",
+          "type": "object",
+          "properties": {
+            "country": {
+              "description": "The Country to which the policy is applicable.",
+              "type": "string"
+            },
+            "city": {
+              "description": "The City to which the policy is applicable.",
+              "type": "string"
+            }
+          }
+        },
+        "subscribers": {
+          "description": "The list of subscribers to which the policy is applicable.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "geofence": {
+      "type": "object",
+      "properties": {
+        "polygon": {
+          "description": "The list of coordinates that define the geofence.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

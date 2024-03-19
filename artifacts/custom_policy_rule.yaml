@@ -1,0 +1,45 @@
+type: object
+description: A custom policy rule that can be defined by the organization.
+properties:
+  name:
+    description: Name of the custom policy rule.
+    type: string
+  description:
+    description: Description of the custom policy rule.
+    type: string
+  status:
+    description: Status of the custom policy rule - ACTIVE, INACTIVE.
+    type: string
+    enum:
+      - ACTIVE
+      - INACTIVE
+  temporal:
+    description: Information about the time period for which the custom policy rule is applicable.
+    type: object
+    properties:
+      start:
+        description: The start time of the custom policy rule.
+        type: string
+        format: date-time
+      end:
+        description: The end time of the custom policy rule.
+        type: string
+        format: date-time
+  rules:
+    description: Rules and conditions for the custom policy.
+    type: object
+  exceptions:
+    description: Exceptions to the custom policy rules.
+    type: array
+    items:
+      type: object
+      properties:
+        exception_type:
+          description: Type of exception.
+          type: string
+        allowed:
+          description: Whether the exception is allowed or not.
+          type: boolean
+        reason:
+          description: Reason for the exception.
+          type: string

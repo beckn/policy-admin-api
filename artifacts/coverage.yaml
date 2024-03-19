@@ -1,0 +1,28 @@
+type: object
+description: Information about the area and time period for which the policy is applicable.
+properties:
+  spatial:
+    description: Information about the area for which the policy is applicable.
+    type: array
+    properties:
+      country:
+        description: The Country to which the policy is applicable.
+        type: string
+      city:
+        description: The City to which the policy is applicable.
+        type: string
+  subscribers:
+    description: The list of subscribers to which the policy is applicable.
+    type: array
+  temporal: 
+    description: Information about the time period for which the policy is applicable.
+    type: object
+    properties:
+      start:
+        description: The start time of the policy.
+        type: string
+        format: date-time
+      end:
+        description: The end time of the policy.
+        type: string
+        format: date-time
